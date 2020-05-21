@@ -1,31 +1,51 @@
 import React, { useReducer, useState } from 'react';
 import { todoReducer, initialState } from "../reducers";
+import TodoForm from './TodoForm';
+import Todo from './Todo';
 
 const TodoList = () => {
     const [todoItemState, dispatch ] = useReducer(todoReducer, initialState);
-    const [todoList, setTodoList ] = useState([initialState]);
-    const [todoText, setTodoText] = useState('');
-
-    const handleChanges = (e) => {
-        setTodoText(e.target.value);
-    };
-
+    const [todoList, setTodoList ] = useState([initialState]);   
+    
     const addTodo = (e) => {
         e.preventDefault();
         
-        setTodoList([...todoList, todoItemState]);
-        console.log(todoList);
+        setTodoList([...todoList, todoItemState ]);
+        
+       
+    };
+    
+
+    const toggleCompleted = (currentItem) =>{
+        dispatch({type: 'COMPLETED'});
+        
+        setTodoList(todoList.map(item => {
+            
+            if(currentItem === item) {
+                console.log('items val, red cal', item.completed, todoItemState.completed)
+                if(item.completed === todoItemState.completed){
+                    return {...item, completed: !todoItemState.completed}
+                }
+                return {...item, completed: todoItemState.completed};
+                
+                
+            }
+            return item;
+            
+            
+        }))
+        
     };
 
     return (
         <div>
-            <form onSubmit={addTodo} >
-                <input type='text' name='item' placeholder='Enter todo item' value={todoText} onChange={handleChanges} />
-                <button type='submit' onClick={() => {dispatch({type: 'ADD_TODO', payload: todoText})}}>Add Item</button>
-            </form>
+            <TodoForm addTodo={addTodo} dispatch={dispatch} />
             {todoList.map(item => (
-                <div key={item.id}>
-                    {item.item}
+                <div className={`${item.completed ? "completed" : ""}`} 
+                    onClick={() => {toggleCompleted(item)} }
+                    key={item.id}
+                    >
+                    <Todo item={item} />
                 </div>
             ))}
         </div>

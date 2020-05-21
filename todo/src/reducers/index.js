@@ -8,11 +8,17 @@ export const todoReducer = (state, action) => {
     switch(action.type) {
         case 'ADD_TODO':
             return (
-                {...state, item: action.payload, id: Date.now()}
+                {...state, item: action.payload, completed: false, id: Date.now()}
+                
+            );
+        case 'COMPLETED':
+            return (
+                {...state, completed: !state.completed}
             );
         default:
              return state;
     }
+    
     
 };
 
