@@ -1,25 +1,31 @@
 import React, { useState } from 'react';
 
-const TodoForm = ({addTodo, dispatch}) => {
+const TodoForm = ({dispatch}) => {
     const [todoText, setTodoText] = useState('');
 
     const handleChanges = (e) => {
         setTodoText(e.target.value);
+        console.log(todoText);
     };
 
-    const submit = (e) => {
-        e.preventDefault();
-        addTodo(e);
-        setTodoText("");
-        
-    }
+   const addTodo = e => {
+       e.preventDefault();
+       dispatch({type: 'ADD_TODO', payload: todoText})
+       setTodoText("");
+   }
+
+   const clearCompleted = e => {
+       e.preventDefault();
+       dispatch({type: 'CLEAR_COMPLETED'})
+   }
 
     
     
     return (
-        <form onSubmit={submit} >
+        <form>
             <input type='text' name='item' placeholder='Enter todo item' value={todoText} onChange={handleChanges} />
-            <button type='submit' onClick={() => {dispatch({type: 'ADD_TODO', payload: todoText})}}>Add Item</button>
+            <button onClick={addTodo}>Add Item</button>
+            <button onClick={clearCompleted}>Clear Completed</button>
         </form>
     );
 };
